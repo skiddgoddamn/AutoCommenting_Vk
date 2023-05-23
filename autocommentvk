@@ -1,0 +1,29 @@
+import vk_api
+import random
+import time
+
+vk_session = vk_api.VkApi(token='ТВОЙ_ТОКЕН') #ПОЛУЧИТЬ СВОЙ ТОКЕН ТУТ - https://vkhost.github.io/
+
+vk = vk_session.get_api()
+
+group_id = ID_ГРУППЫ_ВК #УЗНАТЬ ID ГРУППЫ ВК ТУТ - https://regvk.com/id/
+group_post_last = vk.wall.get(owner_id="-" + str(group_id), count=1)
+time_last_post = group_post_last["items"][0]["date"]
+post_id_last = group_post_last["items"][0]["id"]
+
+# цикл работает постоянно и проверяет на новое посты
+while True:
+
+# получаем информацию о текущем посте
+ group_post_cur = vk.wall.get(owner_id="-" + str(group_id), count=1)
+ time_cur_post = group_post_cur["items"][0]["date"]
+ post_id_cur = group_post_cur["items"][0]["id"]
+# сравниваем последний пост и текущий пост
+ time.sleep(1200)
+ if time_last_post != time_cur_post:
+
+  stickers = ['83218','76074','3065','71137','71156','59196','14754']  #СПИСОК СТИКЕРОВ ДЛЯ ОТПРАВКИ В КОММЕНТЫ
+  sticker = random.choice(stickers) #ВЫБИРАЕМ 1 СТИКЕР ИЗ СПИСКА НА РАНДОМ
+  vk.wall.createComment(owner_id="-" + str(group_id), post_id=post_id_cur, sticker_id=sticker) #ДЛЯ ОТПРАВКИ СООБЩЕНИЯ ВМЕСТО СТИКЕРА ИСПОЛЬЗУЙ message="твой_текст" ВМЕСТО sticker_id=sticker
+  time_last_post = time_cur_post
+  post_id_last = post_id_cur 
